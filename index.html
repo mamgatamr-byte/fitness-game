@@ -296,7 +296,642 @@ header,.final-actions,.back,.badge{display:none!important}
 </div>
 
 <script>
-// سيُضاف الجزء الثاني هنا
+/* ============================================================
+   بيانات الأقسام السبعة
+   ============================================================ */
+const SECTIONS = [
+  { id:1, title:"صحتك أمانة", desc:"الإطار الشرعي والمفاهيمي للصحة", icon:"🌿", color:"#2E7D32" },
+  { id:2, title:"مدخلات السلامة", desc:"هواء، ماء، غذاء، شمس، حركة", icon:"💨", color:"#0288D1" },
+  { id:3, title:"أرقامك المرجعية", desc:"سعرات، دهون، سكر، ملح وفق WHO", icon:"📊", color:"#EF6C00" },
+  { id:4, title:"الماء والبروتين والخصر", desc:"كم تشرب؟ كم تأكل؟ وما قاعدة الخصر؟", icon:"💧", color:"#00897B" },
+  { id:5, title:"تحرك كي تحيا", desc:"توصيات النشاط البدني وفق WHO 2020", icon:"🏃", color:"#D84315" },
+  { id:6, title:"اعرف حالتك", desc:"إرشادات النحيف والبدين والطبيعي", icon:"🧭", color:"#6A1B9A" },
+  { id:7, title:"صحّح مفاهيمك", desc:"أشهر المفاهيم الخاطئة + رسائل للأسرة", icon:"💡", color:"#F9A825" }
+];
+
+/* ============================================================
+   محتوى الأقسام السبعة (5 بطاقات + 5 أسئلة لكل قسم)
+   ============================================================ */
+const CONTENT = {
+  1: {
+    cards: [
+      { title:"الصحة أمانة", body:"الله استأمننا على أجسادنا، ولا يجوز إلحاق الضرر بها. حفظ النفس من الضروريات الخمس (الدين، النفس، العقل، المال، العرض)، ويشمل السلامة الجسدية والعقلية والنفسية." },
+      { title:"مفهوم الصحة", body:"الصحة ثلاثة أبعاد متكاملة: الجسدية (سلامة البنية والوظيفة)، العقلية (التفكير السببي السليم)، والنفسية (القبول والرضا والتسليم)." },
+      { title:"الجهاز الهضمي", body:"هو الأداة التي تحوّل الغذاء إلى مواد يستفيد منها الجسم. عند وجود أعراض مستمرة (انتفاخ، إمساك، إسهال، ألم) راجع الطبيب، ولا تعتمد على التشخيص الذاتي." },
+      { title:"الغدة الدرقية", body:"إذا كنت نحيفاً بشكل غير معتاد، فقد يُنصح بفحص الهرمونات (خاصة الغدة الدرقية والكظرية)، لكن بعد استشارة الطبيب وليس بشكل روتيني." },
+      { title:"رسالة لك", body:"صحتك مسؤوليتك أنت، ونحن نقدم لك المعلومات والدعم فقط. لا تنتظر من أحد أن يغيّر عاداتك بدلاً عنك، وابدأ بخطوة صغيرة اليوم." }
+    ],
+    questions: [
+      { q:"من الضروريات الخمس التي أمر الإسلام بحفظها:",
+        options:["الدين والنفس والعقل والمال والعرض","الطعام والشراب والنوم والرياضة","المال والجاه والشهرة","فقط الصحة الجسدية"],
+        correct:0, explain:"الضروريات الخمس هي: الدين، النفس، العقل، المال، العرض. حفظ النفس يشمل السلامة الجسدية والعقلية والنفسية." },
+      { q:"الصحة النفسية في هذا المحتوى تعني:",
+        options:["عدم الشعور بالحزن أبداً","القبول والرضا والاستسلام لما قسمه الله","السعادة الدائمة","الانعزال عن الناس"],
+        correct:1, explain:"الصحة النفسية تقوم على القبول والرضا والاستسلام لما قسمه الله، وليست السعادة الدائمة أو عدم الحزن." },
+      { q:"عند وجود أعراض هضمية مستمرة (انتفاخ، إسهال، ألم)، التصرف الصحيح هو:",
+        options:["تجاهلها حتى تزول وحدها","تشخيصها ذاتياً عبر الإنترنت","مراجعة الطبيب","شرب أعشاب عشوائية"],
+        correct:2, explain:"الأعراض المستمرة تحتاج تقييماً طبياً. التشخيص الذاتي قد يؤخر العلاج أو يسبب ضرراً." },
+      { q:"قول: «صحتك مسؤولية والديك» — هذا المفهوم:",
+        options:["صحيح تماماً","صحيح جزئياً","خطأ، فأنت المسؤول ونحن نقدم الدعم فقط","يعتمد على العمر"],
+        correct:2, explain:"أنت المسؤول الأول عن صحتك. المحيط يقدم الدعم والمعلومات، لكن القرار والسلوك مسؤوليتك." },
+      { q:"فحص الغدة الدرقية للنحيف:",
+        options:["واجب على كل نحيف بشكل روتيني","يُجرى بعد استشارة الطبيب عند وجود داعٍ","ممنوع تماماً","يكفي تحليل عشوائي من الإنترنت"],
+        correct:1, explain:"الفحص يُجرى بتوجيه الطبيب عند وجود داعٍ سريري، وليس روتينياً لكل نحيف." }
+    ]
+  },
+  2: {
+    cards: [
+      { title:"الهواء النقي", body:"الملوثات (الغبار، التدخين، المبيدات، غازات المصانع، عوادم السيارات) تضر بالجهاز التنفسي. الوقاية: تهوية المنزل جيداً يومياً، وتجنب الأماكن الملوثة." },
+      { title:"الماء النقي", body:"الماء المعقّم الصالح للشرب ضروري لوظائف الجسم. تجنب المياه مجهولة المصدر، واحرص على نظافة أواني التخزين." },
+      { title:"الغذاء الصحي", body:"غذاء خالٍ من الملوثات، متنوع، غني بالحبوب الكاملة والخضروات والفواكه والبروتينات. تجنب الأطعمة المصنعة بكثرة." },
+      { title:"ضوء الشمس", body:"التعرض للشمس لا يقل عن نصف ساعة يومياً (يفضل صباحاً) يساعد على تصنيع فيتامين د وتقوية العظام والمزاج. تجنب ساعات الذروة." },
+      { title:"النشاط البدني", body:"مهم للحياة كأهمية الهواء والماء والغذاء والشمس. الحركة اليومية (المقصودة وغير المقصودة) تحافظ على سلامة الأعضاء وتقي من الأمراض المزمنة." }
+    ],
+    questions: [
+      { q:"من أهم إجراءات الوقاية من تلوث الهواء داخل المنزل:",
+        options:["إغلاق النوافذ دائماً","تهوية المنزل جيداً يومياً","استخدام المبيدات بكثرة","الاعتماد على معطرات الجو"],
+        correct:1, explain:"التهوية الجيدة يومياً تجدد الهواء وتقلل تركيز الملوثات داخل المنزل." },
+      { q:"الماء الصالح للشرب يجب أن يكون:",
+        options:["معقّماً وخالياً من الملوثات","أي ماء متاح","ماء مقطراً فقط","ماء مضافاً إليه سكر"],
+        correct:0, explain:"الماء يجب أن يكون معقّماً وصالحاً للشرب، وخالياً من الملوثات الميكروبية والكيميائية." },
+      { q:"المدة الموصى بها للتعرض لأشعة الشمس يومياً:",
+        options:["5 دقائق فقط","لا يقل عن نصف ساعة","3 ساعات على الأقل","لا حاجة للشمس"],
+        correct:1, explain:"نصف ساعة يومياً (يفضل صباحاً) تساعد على تصنيع فيتامين د، مع تجنب ساعات الذروة." },
+      { q:"النشاط البدني بالنسبة للجسم:",
+        options:["رفاهية اختيارية","مهم كأهمية الهواء والماء والغذاء","مخصص للرياضيين فقط","يسبب الإرهاق فقط"],
+        correct:1, explain:"النشاط البدني ضروري كأهمية الهواء والماء والغذاء والشمس، ويقي من الأمراض المزمنة." },
+      { q:"الغذاء الصحي هو:",
+        options:["كل ما هو متوفر في السوق","غذاء متنوع خالٍ من الملوثات","الاعتماد على المعلبات","الإكثار من السكريات"],
+        correct:1, explain:"الغذاء الصحي متنوع، خالٍ من الملوثات، غني بالحبوب الكاملة والخضروات والفواكه والبروتينات." }
+    ]
+  },
+  3: {
+    cards: [
+      { title:"السعرات الحرارية", body:"الأولاد 7–18 سنة: 1400–3200 سعرة حسب النشاط. الفتيات: 1200–2400 سعرة. قيم تقديرية عامة، لا تُستخدم لحساب فردي دقيق. المصدر: Dietary Guidelines 2020–2025." },
+      { title:"الدهون وفق WHO", body:"إجمالي الدهون: أقل من 30% من الطاقة اليومية. الدهون المشبعة: أقل من 10%. الدهون المتحولة: أقل من 1%. تجنب المقليات والوجبات السريعة قدر الإمكان." },
+      { title:"السكريات الحرة", body:"أقل من 10% من الطاقة اليومية (ويُنصح بأقل من 5% لفائدة إضافية). تشمل السكر المضاف والعصائر المحلاة. الماء هو المشروب الأساسي." },
+      { title:"الصوديوم (الملح)", body:"أقل من 2 غرام صوديوم يومياً (ما يعادل 5 غرامات ملح). الإكثار يرفع ضغط الدم ويضر الكلى. قلل من المخللات والأطعمة المصنعة." },
+      { title:"توزيع العناصر", body:"اجعل الحبوب الكاملة والخضروات والفواكه المصدر الرئيسي للطاقة. الكربوهيدرات 50–60% نطاق مرجعي شائع وليس إلزامياً من WHO. البروتين مصدره متنوع في كل وجبة." }
+    ],
+    questions: [
+      { q:"حسب WHO، يجب أن تكون نسبة الدهون المشبعة من الطاقة اليومية:",
+        options:["أقل من 10%","أقل من 30%","أقل من 50%","غير محددة"],
+        correct:0, explain:"WHO توصي بأن تكون الدهون المشبعة أقل من 10% من إجمالي الطاقة اليومية، والدهون المتحولة أقل من 1%." },
+      { q:"الحد الموصى به من الصوديوم يومياً وفق WHO:",
+        options:["أقل من 2 غرام صوديوم (≈5 غ ملح)","5 غرام صوديوم","10 غرامات صوديوم","لا حد أقصى"],
+        correct:0, explain:"أقل من 2 غرام صوديوم يومياً، ما يعادل 5 غرامات ملح. الإكثار يرفع ضغط الدم ويضر الكلى." },
+      { q:"السكريات الحرة يجب أن تكون:",
+        options:["أقل من 10% من الطاقة (ويُفضل أقل من 5%)","حتى 30%","حتى 50%","لا حد لها"],
+        correct:0, explain:"WHO توصي بأقل من 10%، ويُفضل أقل من 5% لفائدة إضافية." },
+      { q:"أفضل مصدر للطاقة حسب التوصيات:",
+        options:["الحبوب الكاملة والخضروات والفواكه","السكريات والحلويات","المقليات","المشروبات الغازية"],
+        correct:0, explain:"الحبوب الكاملة والخضروات والفواكه هي المصدر الرئيسي الموصى به للطاقة." },
+      { q:"قيم السعرات الحرارية في هذا المحتوى هي:",
+        options:["حسابات فردية دقيقة","قيم تقديرية عامة تعليمية","إلزامية للجميع","غير مهمة"],
+        correct:1, explain:"القيم تقديرية عامة للأغراض التعليمية، ولا تُستخدم لحساب فردي دقيق، ولا تُغني عن استشارة الطبيب." }
+    ]
+  },
+  4: {
+    cards: [
+      { title:"الماء اليومي", body:"5–8 سنوات: 0.5–1.2 لتر. 9–13 سنة: 0.65–1.8 لتر. 14–18 سنة: 0.85–2.6 لتر. قاعدة عملية: راقب لون البول؛ أصفر فاتح = كافٍ، داكن = اشرب المزيد." },
+      { title:"البروتين اليومي", body:"4–8 سنوات: ~19غ. 9–13 سنة: ~34غ. 14–18 أولاد: ~52غ. 14–18 فتيات: ~46غ. مصدر جيد في كل وجبة (لحم، سمك، دجاج، بيض، بقوليات، حليب)." },
+      { title:"قاعدة محيط الخصر", body:"القاعدة الذهبية: محيط الخصر أقل من نصف الطول (WHtR < 0.5). الزيادة الكبيرة عن النصف تشير إلى سمنة ودهون حشوية. النقص الكبير يشير إلى نحافة." },
+      { title:"التصنيف الخماسي (WHtR)", body:"نحيف جداً: أقل من 0.4. نحيف: 0.4–0.49. طبيعي: ~0.5. بدين: 0.5–0.59. بدين جداً: 0.6 فأكثر. قيم تعليمية تقريبية، ليست تشخيصاً طبياً." },
+      { title:"كيف تقيس؟", body:"قف مستقيماً، لُف شريط القياس حول الخصر (فوق السرة بقليل)، بدون شد. اقسم الناتج على طولك بالسنتيمتر. النتيجة أقل من 0.5 = صحي عموماً." }
+    ],
+    questions: [
+      { q:"قاعدة محيط الخصر الصحية هي:",
+        options:["محيط الخصر أقل من نصف الطول","محيط الخصر أكبر من الطول","محيط الخصر يساوي الطول","لا علاقة بينهما"],
+        correct:0, explain:"القاعدة الذهبية: WHtR < 0.5. أي أن محيط الخصر يجب أن يكون أقل من نصف طولك." },
+      { q:"إذا كان لون البول داكناً، فذلك يعني:",
+        options:["أنت تشرب ماءً كافياً","تحتاج لشرب المزيد من الماء","أنت مريض حتماً","لا دلالة له"],
+        correct:1, explain:"لون البول الأصفر الفاتح = كفاية الماء. الداكن = اشرب المزيد." },
+      { q:"كمية الماء الموصى بها لشخص عمره 15 سنة:",
+        options:["0.5 لتر","0.85–2.6 لتر","4 لترات","لا حاجة للماء"],
+        correct:1, explain:"الفئة العمرية 14–18 سنة تحتاج 0.85–2.6 لتر يومياً حسب النشاط والمناخ." },
+      { q:"البروتين اليومي التقريبي لفتاة عمرها 16 سنة:",
+        options:["~19 غرام","~34 غرام","~46 غرام","~80 غرام"],
+        correct:2, explain:"الفتيات 14–18 سنة: ~46 غرام بروتين يومياً تقريباً." },
+      { q:"إذا كان طولك 150 سم ومحيط خصرك 80 سم، فما تقييمك؟",
+        options:["نحيف جداً","طبيعي","بدين (WHtR = 0.53)","لا يمكن التقييم"],
+        correct:2, explain:"80 ÷ 150 = 0.53 → يقع في نطاق 0.5–0.59 = بدين. القيم تعليمية، راجع الطبيب للتقييم الدقيق." }
+    ]
+  },
+  5: {
+    cards: [
+      { title:"تعريف النشاط البدني", body:"حركة الجسم التي تنتجها العضلات الهيكلية وتستهلك طاقة. تشمل الحركة اليومية (المقصودة وغير المقصودة) التي تضمن سلامة أعضاء الجسم." },
+      { title:"توصيات الأطفال (5–17)", body:"وفق WHO 2020: متوسط 60 دقيقة يومياً من نشاط هوائي متوسط إلى عالٍ. أكثر من 60 دقيقة يمنح فوائد إضافية. تقوية العضلات والعظام 3 مرات أسبوعياً على الأقل." },
+      { title:"توصيات البالغين", body:"150–300 دقيقة أسبوعياً من نشاط متوسط، أو 75–150 دقيقة من نشاط عالٍ، أو مزيج. تمارين تقوية العضلات مرتين أو أكثر أسبوعياً." },
+      { title:"المشي والجري", body:"المشي: نصف ساعة، 4–5 أيام أسبوعياً. الجري/الهرولة: ربع ساعة يومياً لمن لا يعاني من سمنة مفرطة. البدين جداً: تجنب المشي/الجري حتى الانتقال للمرحلة الأخف." },
+      { title:"تمارين المقاومة", body:"تعتمد على وزن الجسم (ضغط، قرفصاء، بلانك). المبدأ الذهبي: التحميل التدريجي. للمراهقين: إتقان الحركة أولاً بوزن الجسم." }
+    ],
+    questions: [
+      { q:"حسب WHO، الأطفال 5–17 سنة يحتاجون:",
+        options:["30 دقيقة أسبوعياً","60 دقيقة يومياً من نشاط متوسط إلى عالٍ","10 دقائق يومياً","لا حاجة للنشاط"],
+        correct:1, explain:"WHO 2020 توصي بمتوسط 60 دقيقة يومياً من نشاط هوائي متوسط إلى عالٍ للأطفال والمراهقين." },
+      { q:"البالغون يحتاجون أسبوعياً (وفق WHO):",
+        options:["150–300 دقيقة نشاط متوسط","30 دقيقة فقط","10 ساعات","لا حاجة"],
+        correct:0, explain:"150–300 دقيقة من النشاط المتوسط، أو 75–150 دقيقة من النشاط العالي، أو مزيج منهما أسبوعياً." },
+      { q:"البدين جداً يجب أن:",
+        options:["يبدأ بالجري مباشرة","يتجنب المشي/الجري حتى ينتقل للبدانة الخفيفة","يمارس الرياضات العنيفة","لا يتحرك أبداً"],
+        correct:1, explain:"البدين جداً يتجنب المشي/الجري/القفز حتى ينتقل للبدانة الخفيفة، ويبدأ بتمارين صديقة للمفاصل (مائية، دراجة ثابتة)." },
+      { q:"تمارين تقوية العضلات للأطفال تُؤدى:",
+        options:["3 مرات أسبوعياً على الأقل","مرة شهرياً","لا حاجة لها","يومياً بشكل عنيف"],
+        correct:0, explain:"WHO توصي بأن تتضمن الأنشطة تقوية العضلات والعظام 3 مرات على الأقل أسبوعياً للأطفال." },
+      { q:"المبدأ الذهبي في تمارين المقاومة:",
+        options:["زيادة الوزن/التكرارات تدريجياً","البدء بأثقل وزن","التمرين بلا راحة","تجنب الماء أثناء التمرين"],
+        correct:0, explain:"التحميل التدريجي هو المبدأ الذهبي: زيادة تدريجية في الوزن أو التكرارات أو المجموعات." }
+    ]
+  },
+  6: {
+    cards: [
+      { title:"القاعدة العامة", body:"لجميع الحالات: نشاط بدني مناسب + تغذية سليمة. صحتك مسؤوليتك، ونحن نقدم الدعم والمساعدة فقط. التدرج في كل شيء." },
+      { title:"النحيف جداً", body:"3 وجبات + 3 وجبات خفيفة، الأكل حتى الشبع (لا تنتظر الجوع)، غذاء متنوع، نشاط لبناء العضلات (لمنع زيادة الدهون فقط)." },
+      { title:"البدين (خفيف/متوسط)", body:"لا تأكل إلا عند الجوع. اختبر الجوع بالماء (انتظر ربع ساعة). توقف عند 80% شبع. الأكل ببطء. الإكثار من البروتين. نشاط بدني منتظم." },
+      { title:"البدين جداً", body:"لا تأكل إلا عند الجوع. اختبر الجوع بالماء. طعام صحي دون شبع وببطء شديد. تجنب التمارين المؤذية للمفاصل (المشي/الجري/القفز) حتى الانتقال للبدانة الخفيفة. ابدأ بتمارين مائية أو دراجة ثابتة." },
+      { title:"مبدأ التدرج", body:"ينطبق على تقليل الطعام وزيادة النشاط معاً. لا حرمان مفاجئ، ولا تمارين عنيفة من البداية. التغيير رحلة وليس حدثاً." }
+    ],
+    questions: [
+      { q:"البدين (خفيف/متوسط) يجب أن:",
+        options:["يمتنع عن الطعام تماماً","لا يأكل إلا عند الجوع ويختبره بالماء","يأكل بسرعة","يتجنب البروتين"],
+        correct:1, explain:"لا تأكل إلا عند الجوع، اختبر الجوع بالماء (انتظر ربع ساعة)، توقف عند 80% شبع، وأكثر من البروتين." },
+      { q:"للبدين جداً، التمارين المناسبة في البداية:",
+        options:["الجري السريع","القفز","تمارين مائية أو دراجة ثابتة","رفع الأثقال الثقيلة"],
+        correct:2, explain:"البدين جداً يتجنب المشي/الجري/القفز حتى ينتقل للبدانة الخفيفة، ويبدأ بتمارين صديقة للمفاصل." },
+      { q:"النحيف جداً يجب أن:",
+        options:["ينتظر الجوع فقط","يأكل حتى الشبع 3 وجبات + 3 خفيفة","يمتنع عن الطعام","يشرب ماء فقط"],
+        correct:1, explain:"النحيف جداً: 3 وجبات + 3 خفيفة، الأكل حتى الشبع، غذاء متنوع، نشاط لبناء العضلات." },
+      { q:"مبدأ التدرج يعني:",
+        options:["الحرمان المفاجئ","التمارين العنيفة من البداية","التغيير التدريجي في الطعام والنشاط","لا تغيير أبداً"],
+        correct:2, explain:"التدرج في تقليل الطعام وزيادة النشاط معاً. لا حرمان مفاجئ، ولا تمارين عنيفة من البداية." },
+      { q:"السبب الذي يجعل النحيف يأكل قليلاً:",
+        options:["قلة الشهية المرضية دائماً","تأجيل الأكل والمماطلة عند الجوع","الطعام غير متوفر","مرض خطير حتماً"],
+        correct:1, explain:"النحيف غالباً يؤجل الأكل ويماطل عند الجوع. الحل: انتظام الوجبات وعدم انتظار الجوع الشديد." }
+    ]
+  },
+  7: {
+    cards: [
+      { title:"«لا أستطيع الامتناع»", body:"تستطيع، لكن ليس بتقليل كبير ومفاجئ. تدرّج في التقليل. التغيير التدريجي هو الذي يستمر، لا الحرمان القاسي." },
+      { title:"«أشعر بالجوع دائماً»", body:"غير صحيح غالباً. قد يكون عطشاً. اشرب ماء وانتظر ربع ساعة قبل أن تأكل. هذا اختبار عملي للجوع الحقيقي." },
+      { title:"«الأكل متعة»", body:"الأكل وسيلة للحياة، ومن اتخذه متعة فسيظل بديناً. اعتبره وقوداً للجسم، وامنح نفسك المتعة في مجالات أخرى." },
+      { title:"«توجد طرق سريعة»", body:"الأدوية ليست آمنة دائماً، ولا تُعطى إلا للسمنة المفرطة جداً وبإشراف. الطرق الطبيعية تحتاج صبراً ووقتاً. لا حمية مؤقتة، بل تغيير دائم." },
+      { title:"رسائل للأسرة والمدرسة", body:"البيت أول مدرسة: لا تشترِ ما لا تريد أن يأكله طفلك. لا تجبره على إنهاء الطبق. الحركة عادة عائلية. راقب ولا تُشخّص. الصحة النفسية جزء من الصحة." }
+    ],
+    questions: [
+      { q:"عند الشعور بالجوع، الخطوة العملية الأولى:",
+        options:["تناول وجبة كبيرة فوراً","اشرب ماء وانتظر ربع ساعة","تجاهل الجوع","تناول حلويات"],
+        correct:1, explain:"اشرب ماء وانتظر ربع ساعة. قد يكون الشعور بالجوع عطشاً في كثير من الأحيان." },
+      { q:"عبارة «الأكل متعة» — التقييم الصحيح:",
+        options:["صحيحة تماماً","الأكل وسيلة للحياة، واعتباره متعة يقود للبدانة","لا علاقة لها بالصحة","مفيدة دائماً"],
+        correct:1, explain:"الأكل وسيلة للحياة ووقود للجسم. من اتخذه متعة أساسية فسيظل بديناً. ابحث عن المتعة في مجالات أخرى." },
+      { q:"الطرق السريعة لإنقاص الوزن:",
+        options:["آمنة دائماً","غير آمنة غالباً، والطبيعية تحتاج صبراً","الأفضل صحياً","لا تحتاج إشرافاً"],
+        correct:1, explain:"الأدوية ليست آمنة دائماً، والطرق الطبيعية تحتاج صبراً ووقتاً. التغيير الدائم أفضل من الحمية المؤقتة." },
+      { q:"دور الأسرة في صحة الطفل:",
+        options:["شراء ما يطلبه الطفل دائماً","جعل الخيارات الصحية هي المتاحة","إجباره على إنهاء الطبق","السخرية من جسمه"],
+        correct:1, explain:"البيت أول مدرسة. اجعل الخيارات الصحية هي المتاحة، ولا تجبره على إنهاء الطبق، وتجنب السخرية." },
+      { q:"«أشعر بالجوع دائماً» — الرد الصحيح:",
+        options:["صحيح دائماً","قد يكون عطشاً، فاشرب ماء وانتظر","يعني مرضاً خطيراً","لا حل له"],
+        correct:1, explain:"الشعور الدائم بالجوع قد يكون عطشاً. اشرب ماء وانتظر ربع ساعة قبل الأكل." }
+    ]
+  }
+};
+
+/* ============================================================
+   الحالة والتخزين
+   ============================================================ */
+const STORE_KEY = "fitness_journey_v2";
+let state = loadState();
+let currentSection = 1;
+let cardIndex = 0;
+let quizIndex = 0;
+let score = 0;
+let reviewMode = false;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return { user: null, sections: {}, startDate: null, finishDate: null, certNo: null };
+}
+function saveState() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+/* ============================================================
+   التنقل
+   ============================================================ */
+function goHome() {
+  document.getElementById("game-view").classList.add("hidden");
+  document.getElementById("final-view").classList.add("hidden");
+  document.getElementById("home-view").classList.remove("hidden");
+  renderHome();
+  window.scrollTo(0,0);
+}
+
+function isSectionUnlocked(id) {
+  if (id === 1) return true;
+  return !!(state.sections[id-1] && state.sections[id-1].completed);
+}
+function isSectionCompleted(id) {
+  return !!(state.sections[id] && state.sections[id].completed);
+}
+function allCompleted() {
+  return SECTIONS.every(s => isSectionCompleted(s.id));
+}
+
+function openSection(id, review) {
+  if (!isSectionUnlocked(id)) {
+    alert("🔒 هذا القسم مقفل. أتمم القسم السابق أولاً.");
+    return;
+  }
+  currentSection = id;
+  cardIndex = 0; quizIndex = 0; score = 0; reviewMode = !!review;
+  const sec = SECTIONS.find(s => s.id === id);
+  document.documentElement.style.setProperty("--theme", sec.color);
+  document.getElementById("game-header").style.setProperty("--theme", sec.color);
+  document.getElementById("game-title").textContent = sec.title;
+  document.getElementById("game-sub").textContent = "القسم " + id;
+  document.getElementById("game-badge").textContent = id + " / 7";
+  document.getElementById("welcome-title").textContent = review ? ("مراجعة: " + sec.title) : ("أهلاً بك في القسم " + id);
+  document.getElementById("welcome-desc").textContent = sec.desc;
+  document.getElementById("home-view").classList.add("hidden");
+  document.getElementById("final-view").classList.add("hidden");
+  document.getElementById("game-view").classList.remove("hidden");
+  showScreen("screen-welcome");
+  window.scrollTo(0,0);
+}
+
+function showScreen(id) {
+  document.querySelectorAll("#game-view .screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   الصفحة الرئيسية
+   ============================================================ */
+function renderHome() {
+  const grid = document.getElementById("sections-grid");
+  grid.innerHTML = "";
+  SECTIONS.forEach(s => {
+    const unlocked = isSectionUnlocked(s.id);
+    const done = isSectionCompleted(s.id);
+    const status = done ? "مكتمل ✅" : (unlocked ? "متاح" : "مقفل 🔒");
+    const cls = done ? "status-done" : (unlocked ? "status-open" : "status-locked");
+    const card = document.createElement("div");
+    card.className = "section-card" + (unlocked ? "" : " locked");
+    card.style.setProperty("--sc", s.color);
+    const scoreTxt = done ? ` (${state.sections[s.id].score}/${state.sections[s.id].total})` : "";
+    card.innerHTML = `
+      <div class="section-card-info">
+        <div class="section-card-num">القسم ${s.id}</div>
+        <div class="section-card-title">${s.title}</div>
+        <div class="section-card-desc">${s.desc}</div>
+        <span class="section-card-status ${cls}">${status}${scoreTxt}</span>
+      </div>
+      <div class="section-card-icon">${s.icon}</div>`;
+    card.onclick = () => {
+      if (done) openSection(s.id, true);
+      else if (unlocked) openSection(s.id, false);
+      else alert("🔒 أتمم القسم السابق أولاً.");
+    };
+    grid.appendChild(card);
+  });
+
+  const doneCount = SECTIONS.filter(s => isSectionCompleted(s.id)).length;
+  document.getElementById("progress-fill").style.width = (doneCount/7*100) + "%";
+  document.getElementById("progress-label").textContent = doneCount + " من 7 مكتملة";
+  document.getElementById("home-badge").textContent = doneCount + " / 7";
+
+  const cta = document.getElementById("final-cta-container");
+  if (allCompleted()) {
+    cta.innerHTML = `<div class="final-cta">
+      <h2>🎉 أتممت الرحلة كاملة!</h2>
+      <p>اضغط لعرض شهادتك وتقريرك الشامل.</p>
+      <button class="btn" onclick="showFinal()">🎓 عرض الشهادة والتقرير</button>
+    </div>`;
+  } else {
+    cta.innerHTML = "";
+  }
+}
+
+/* ============================================================
+   التسجيل
+   ============================================================ */
+function onRoleChange() {
+  const role = document.getElementById("reg-role").value;
+  document.getElementById("field-grade").classList.toggle("hidden", role !== "student");
+  document.getElementById("field-category").classList.toggle("hidden", !["teacher","admin","parent"].includes(role));
+}
+function roleLabel() {
+  const map = { student:"طالب", teacher:"معلم", admin:"إداري", parent:"ولي أمر" };
+  return state.user ? (map[state.user.role] || "") : "";
+}
+
+function startSection() {
+  if (!CONTENT[currentSection]) { alert("محتوى هذا القسم غير متوفر."); return; }
+  if (reviewMode || state.user) {
+    cardIndex = 0;
+    renderCard();
+    showScreen("screen-cards");
+  } else {
+    showScreen("screen-register");
+  }
+}
+
+function submitRegister() {
+  const name = document.getElementById("reg-name").value.trim();
+  const role = document.getElementById("reg-role").value;
+  if (!name) { alert("الرجاء إدخال الاسم"); return; }
+  if (!role) { alert("الرجاء اختيار التصنيف"); return; }
+  let grade = "", category = "";
+  if (role === "student") {
+    grade = document.getElementById("reg-grade").value;
+    if (!grade) { alert("الرجاء اختيار الصف"); return; }
+  } else {
+    category = document.getElementById("reg-category").value;
+    if (!category) { alert("الرجاء اختيار الصنف"); return; }
+  }
+  state.user = { name, role, grade, category };
+  if (!state.startDate) state.startDate = new Date().toISOString();
+  saveState();
+  cardIndex = 0;
+  renderCard();
+  showScreen("screen-cards");
+}
+
+/* ============================================================
+   البطاقات
+   ============================================================ */
+function renderCard() {
+  const cards = CONTENT[currentSection].cards;
+  const c = cards[cardIndex];
+  document.getElementById("cards-counter").textContent = `بطاقة ${cardIndex+1} من ${cards.length}`;
+  document.getElementById("card-display").innerHTML = `<h3>${c.title}</h3><p>${c.body}</p>`;
+  document.getElementById("btn-next-card").textContent = (cardIndex === cards.length-1) ? (reviewMode ? "إنهاء المراجعة" : "بدء الأسئلة") : "التالي";
+}
+function prevCard() { if (cardIndex > 0) { cardIndex--; renderCard(); } }
+function nextCard() {
+  const cards = CONTENT[currentSection].cards;
+  if (cardIndex < cards.length - 1) { cardIndex++; renderCard(); return; }
+  if (reviewMode) { goHome(); return; }
+  quizIndex = 0; score = 0; renderQuestion(); showScreen("screen-quiz");
+}
+
+/* ============================================================
+   الأسئلة
+   ============================================================ */
+function renderQuestion() {
+  const qs = CONTENT[currentSection].questions;
+  const q = qs[quizIndex];
+  document.getElementById("quiz-counter").textContent = `سؤال ${quizIndex+1} من ${qs.length}`;
+  document.getElementById("quiz-progress-fill").style.width = ((quizIndex)/qs.length*100) + "%";
+  const display = document.getElementById("quiz-display");
+  display.innerHTML = `<div class="quiz-q">${q.q}</div>` +
+    q.options.map((opt,i) => `<button class="option" data-i="${i}" onclick="answer(${i})">${opt}</button>`).join("");
+}
+
+function answer(selected) {
+  const qs = CONTENT[currentSection].questions;
+  const q = qs[quizIndex];
+  const btns = document.querySelectorAll("#quiz-display .option");
+  btns.forEach(b => b.disabled = true);
+  btns[q.correct].classList.add("correct");
+  if (selected !== q.correct) btns[selected].classList.add("wrong");
+  else score++;
+  const exp = document.createElement("div");
+  exp.className = "explain";
+  exp.innerHTML = `<strong>${selected===q.correct?"✅ صحيح!":"❌ الإجابة الصحيحة: " + q.options[q.correct]}</strong><br>${q.explain}`;
+  document.getElementById("quiz-display").appendChild(exp);
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "btn btn-primary";
+  nextBtn.style.marginTop = "14px";
+  nextBtn.textContent = (quizIndex < qs.length - 1) ? "السؤال التالي" : "عرض النتيجة";
+  nextBtn.onclick = () => {
+    if (quizIndex < qs.length - 1) { quizIndex++; renderQuestion(); }
+    else showResult();
+  };
+  document.getElementById("quiz-display").appendChild(nextBtn);
+}
+
+function showResult() {
+  const total = CONTENT[currentSection].questions.length;
+  const pct = score / total;
+  let emoji = "🎉", title = "أحسنت!", msg = "";
+  if (pct === 1) { emoji="🏆"; title="إتقان كامل!"; msg="أداء مثالي في هذا القسم."; }
+  else if (pct >= 0.8) { emoji="🌟"; title="ممتاز!"; msg="مستوى عالٍ جداً."; }
+  else if (pct >= 0.6) { emoji="👍"; title="جيد جداً"; msg="راجع التفسيرات لتعزيز الفهم."; }
+  else { emoji="📚"; title="تحتاج مراجعة"; msg="أعد قراءة البطاقات لاحقاً."; }
+
+  // حفظ نتيجة القسم
+  state.sections[currentSection] = {
+    completed: true, score, total, date: new Date().toISOString()
+  };
+  if (allCompleted() && !state.finishDate) {
+    state.finishDate = new Date().toISOString();
+    state.certNo = genCertNo();
+  }
+  saveState();
+
+  document.getElementById("result-emoji").textContent = emoji;
+  document.getElementById("result-title").textContent = title;
+  document.getElementById("result-score").textContent = `${score} / ${total}`;
+  document.getElementById("result-message").textContent = msg;
+  document.getElementById("result-badge").innerHTML = `🏅 حصلت على شارة إتمام القسم ${currentSection}!`;
+
+  const nextBtn = document.getElementById("btn-result-next");
+  if (currentSection < 7) {
+    nextBtn.textContent = "➡️ القسم التالي";
+    nextBtn.onclick = () => { openSection(currentSection + 1, false); };
+    nextBtn.classList.remove("hidden");
+  } else if (allCompleted()) {
+    nextBtn.textContent = "🎓 عرض الشهادة والتقرير";
+    nextBtn.onclick = () => { showFinal(); };
+    nextBtn.classList.remove("hidden");
+  } else {
+    nextBtn.classList.add("hidden");
+  }
+  showScreen("screen-result");
+}
+
+function goToNextSection() {}
+
+/* ============================================================
+   الشهادة والتقرير النهائي
+   ============================================================ */
+function genCertNo() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i=0;i<5;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return `FIT-2026-${s}`;
+}
+
+function calcTotal() {
+  let got = 0, max = 0;
+  SECTIONS.forEach(s => {
+    got += state.sections[s.id]?.score || 0;
+    max += state.sections[s.id]?.total || 5;
+  });
+  return { got, max, pct: Math.round(got/max*100) };
+}
+
+function getGrade(pct) {
+  if (pct >= 90) return "ممتاز";
+  if (pct >= 80) return "جيد جداً";
+  if (pct >= 70) return "جيد";
+  if (pct >= 60) return "مقبول";
+  return "يحتاج مراجعة";
+}
+
+function showFinal() {
+  const u = state.user;
+  const { got, max, pct } = calcTotal();
+  const grade = getGrade(pct);
+  const dateStr = new Date().toLocaleDateString("ar-SA", { year:"numeric", month:"long", day:"numeric" });
+  const startStr = state.startDate ? new Date(state.startDate).toLocaleDateString("ar-SA") : "—";
+  const days = state.startDate && state.finishDate
+    ? Math.max(1, Math.ceil((new Date(state.finishDate) - new Date(state.startDate))/(1000*60*60*24)))
+    : "—";
+  let identity = u.role === "student" ? `الصف: ${u.grade}` : `الصنف: ${u.category}`;
+
+  // الشهادة
+  document.getElementById("cert-frame").innerHTML = `
+    <div class="cert-header">
+      المملكة العربية السعودية<br>وزارة التعليم<br>
+      الإدارة العامة للتعليم بمنطقة جازان<br>مجمع العز التعليمي
+    </div>
+    <div class="cert-title">شهادة إتمام رحلة اللياقة</div>
+    <div class="cert-sub">أتم بنجاح سلسلة اللياقة التعليمية — 7 أقسام</div>
+    <div class="cert-info">تُمنح هذه الشهادة إلى</div>
+    <div class="cert-name">${u.name}</div>
+    <div class="cert-info">${roleLabel()} — ${identity}</div>
+    <div class="cert-sections-list">
+      <strong style="color:#B8860B;display:block;margin-bottom:6px">الأقسام المكتملة:</strong>
+      <ol>${SECTIONS.map(s => `<li>${s.title} — ${state.sections[s.id]?.score||0}/${state.sections[s.id]?.total||5}</li>`).join("")}</ol>
+    </div>
+    <div class="cert-score">الدرجة الإجمالية: ${got} / ${max} (${pct}%) — التقدير: ${grade}</div>
+    <div class="cert-info" style="font-size:.8rem;color:#888">رقم الشهادة: ${state.certNo || "—"} — تاريخ الإتمام: ${dateStr}</div>
+    <div class="cert-signs">
+      <div><strong>الموجه الصحي</strong>محمد قطابري راجحي</div>
+      <div><strong>مدير المجمع</strong>علي محمد كديش</div>
+    </div>
+    <div class="cert-disclaimer">شهادة مشاركة تعليمية — غير معتمدة رسمياً</div>`;
+
+  // التقرير
+  const strengths = SECTIONS.filter(s => {
+    const d = state.sections[s.id]; return d && (d.score/d.total) >= 0.8;
+  });
+  const weaknesses = SECTIONS.filter(s => {
+    const d = state.sections[s.id]; return d && (d.score/d.total) < 0.6;
+  });
+  const plan = getPlan(u.role);
+
+  document.getElementById("report-area").innerHTML = `
+    <h2>📊 تقرير الأداء الشامل</h2>
+    <p style="color:#666;font-size:.85rem">تاريخ البدء: ${startStr} · تاريخ الإتمام: ${dateStr} · المدة: ${days} يوم</p>
+    <table class="report-table">
+      <thead><tr><th>القسم</th><th>الدرجة</th><th>النسبة</th></tr></thead>
+      <tbody>
+        ${SECTIONS.map(s => {
+          const d = state.sections[s.id];
+          const p = d ? Math.round(d.score/d.total*100) : 0;
+          return `<tr><td>${s.icon} ${s.title}</td><td class="score">${d?.score||0}/${d?.total||5}</td><td>${p}%</td></tr>`;
+        }).join("")}
+      </tbody>
+      <tfoot><tr style="background:#FFF8E1"><th>المجموع</th><th class="score">${got}/${max}</th><th>${pct}%</th></tr></tfoot>
+    </table>
+
+    <div class="report-block block-strengths">
+      <h3>✅ نقاط القوة</h3>
+      ${strengths.length ? `<ul>${strengths.map(s => `<li>${s.title}: أتقنت هذا القسم بامتياز.</li>`).join("")}</ul>` : `<p>لم تُحدد نقاط قوة بارزة بعد، راجع الأقسام لتحسين أدائك.</p>`}
+    </div>
+
+    <div class="report-block block-weaknesses">
+      <h3>⚠️ نقاط تحتاج مراجعة</h3>
+      ${weaknesses.length ? `<ul>${weaknesses.map(s => `<li>${s.title}: يُنصح بقراءة بطاقات هذا القسم مرة أخرى.</li>`).join("")}</ul>` : `<p>لا توجد نقاط ضعف بارزة — أداء متوازن!</p>`}
+    </div>
+
+    <div class="report-block block-plan">
+      <h3>🎯 خطة عملية مقترحة (${roleLabel()})</h3>
+      <ul>${plan.map(p => `<li>${p}</li>`).join("")}</ul>
+    </div>`;
+
+  document.getElementById("home-view").classList.add("hidden");
+  document.getElementById("game-view").classList.add("hidden");
+  document.getElementById("final-view").classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+
+function getPlan(role) {
+  if (role === "student") return [
+    "اشرب ماءً كافياً يومياً (راقب لون البول).",
+    "تحرك 60 دقيقة يومياً (مشي، لعب، رياضة).",
+    "أضف تمارين مقاومة بوزن الجسم مرتين أسبوعياً.",
+    "تناول بروتيناً في كل وجبة، وقلل السكريات والمقليات.",
+    "لا تنتظر الجوع الشديد — انتظم في الوجبات."
+  ];
+  if (role === "teacher") return [
+    "كن قدوة: خصص دقيقة حركة بين الفصول.",
+    "اشرب ماءً أمام الطلاب لتشجيعهم.",
+    "لا تُحرج الطالب البدين، استخدم لغة الصحة.",
+    "شجع النشاط ببدائل آمنة (مشي، تمارين مائية).",
+    "تحرك 150 دقيقة أسبوعياً على الأقل."
+  ];
+  if (role === "parent") return [
+    "اجعل الخيارات الصحية هي المتاحة في المنزل.",
+    "لا تُجبر طفلك على إنهاء الطبق.",
+    "اجعلوا الحركة عادة عائلية (مشي، حدائق).",
+    "راقب ولا تُشخّص — راجع الطبيب عند القلق.",
+    "اهتم بالصحة النفسية وتجنب المقارنة."
+  ];
+  return [
+    "تحرك 150 دقيقة أسبوعياً على الأقل.",
+    "اشرب ماءً كافياً وتناول بروتيناً في كل وجبة.",
+    "قلل الملح والسكريات الحرة والمقليات.",
+    "كن قدوة صحية في محيطك.",
+    "راجع الطبيب قبل أي نشاط عنيف إن كان لديك مانع صحي."
+  ];
+}
+
+/* ============================================================
+   واتساب
+   ============================================================ */
+function sendWhatsAppFinal() {
+  const u = state.user;
+  const { got, max, pct } = calcTotal();
+  const grade = getGrade(pct);
+  const dateStr = new Date().toLocaleDateString("ar-SA");
+  let identity = u.role === "student" ? `الصف: ${u.grade}` : `الصنف: ${u.category}`;
+  const lines = SECTIONS.map(s => {
+    const d = state.sections[s.id];
+    return `• ${s.title}: ${d?.score||0}/${d?.total||5}`;
+  }).join("\n");
+  const msg =
+`🏆 *شهادة إتمام رحلة اللياقة*
+👤 الاسم: ${u.name}
+🎓 التصنيف: ${roleLabel()} — ${identity}
+📊 الدرجة الإجمالية: ${got}/${max} (${pct}%) — ${grade}
+🔢 رقم الشهادة: ${state.certNo || "—"}
+📅 تاريخ الإتمام: ${dateStr}
+
+*ملخص الأداء:*
+${lines}
+
+وزارة التعليم — إدارة تعليم جازان — مجمع العز التعليمي
+الموجه الصحي: محمد قطابري راجحي
+مدير المجمع: علي محمد كديش
+
+⚠️ شهادة مشاركة تعليمية غير معتمدة رسمياً.`;
+  window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+}
+
+/* ============================================================
+   تهيئة
+   ============================================================ */
+renderHome();
+</script>
 </script>
 </body>
 </html>
