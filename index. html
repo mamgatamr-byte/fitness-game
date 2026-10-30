@@ -2,52 +2,301 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>اختبار</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2E7D32">
+<title>رحلة اللياقة — مجمع العز التعليمي</title>
 <style>
-  body {
-    font-family: Tahoma, Arial, sans-serif;
-    background: #2E7D32;
-    color: #fff;
-    text-align: center;
-    padding: 40px 20px;
-    margin: 0;
-    min-height: 100vh;
-  }
-  h1 { font-size: 2rem; margin-bottom: 20px; }
-  p { font-size: 1.1rem; line-height: 1.8; }
-  button {
-    background: #F9A825;
-    color: #000;
-    border: none;
-    padding: 14px 30px;
-    font-size: 1.1rem;
-    border-radius: 12px;
-    margin-top: 20px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  #result {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
+:root{--theme:#2E7D32;--gold:#F9A825;--bg:#f5f7f5;--card:#fff;--text:#1a1a1a;--muted:#666;--shadow:0 2px 8px rgba(0,0,0,.08);--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;padding-bottom:30px}
+.hidden{display:none!important}
+.screen{display:none;padding:20px;max-width:720px;margin:0 auto;animation:fade .3s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+header{background:linear-gradient(135deg,var(--theme),color-mix(in srgb,var(--theme) 65%,#000));color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:0;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+header h1{font-size:1.05rem;font-weight:700;line-height:1.3}
+header .sub{font-size:.72rem;opacity:.9;font-weight:400;margin-top:2px}
+.back{color:#fff;text-decoration:none;font-size:.85rem;background:rgba(255,255,255,.2);padding:6px 12px;border-radius:20px;white-space:nowrap;cursor:pointer}
+.badge{background:rgba(255,255,255,.25);padding:4px 10px;border-radius:20px;font-size:.78rem;white-space:nowrap}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:12px;transition:transform .1s,opacity .2s;font-family:inherit;color:#fff}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--theme)}
+.btn-secondary{background:#e0e0e0;color:#333}
+.btn-whatsapp{background:#25D366}
+.btn-gold{background:var(--gold);color:#000}
+.card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:16px}
+h2{font-size:1.25rem;margin-bottom:12px;color:var(--theme)}
+h3{font-size:1.05rem;margin:14px 0 8px;color:#333}
+p{margin-bottom:10px;font-size:.95rem}
+label{display:block;margin-top:14px;margin-bottom:6px;font-weight:600;font-size:.9rem}
+input,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:1rem;font-family:inherit;background:#fff}
+input:focus,select:focus{outline:none;border-color:var(--theme)}
+.welcome-logo{width:90px;height:90px;margin:0 auto 16px;display:block;border-radius:22px;background:#fff;padding:12px;box-shadow:var(--shadow)}
+.welcome-points{list-style:none;margin:18px 0;text-align:right}
+.welcome-points li{padding:8px 0;border-bottom:1px solid #eee;font-size:.95rem}
+.welcome-points li:last-child{border:none}
+.cards-header{text-align:center;margin-bottom:14px;color:var(--muted);font-size:.9rem}
+.card-display{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);min-height:260px;display:flex;flex-direction:column;justify-content:center}
+.card-display h3{color:var(--theme);font-size:1.15rem;margin-bottom:14px;border-bottom:2px solid var(--theme);padding-bottom:10px}
+.card-display p{line-height:1.8}
+.cards-nav{display:flex;gap:10px;margin-top:16px}
+.cards-nav .btn{flex:1;margin-top:0}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:.85rem;color:var(--muted);gap:12px}
+.quiz-progress{flex:1;height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:var(--theme);width:0;transition:width .3s}
+.quiz-display{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+.quiz-q{font-size:1.05rem;font-weight:700;margin-bottom:18px;line-height:1.6}
+.option{display:block;width:100%;text-align:right;padding:14px;margin-bottom:10px;border:2px solid #e0e0e0;border-radius:12px;background:#fff;font-family:inherit;font-size:.95rem;cursor:pointer;transition:all .15s;color:#333}
+.option:active{transform:scale(.99)}
+.option.correct{border-color:#2E7D32;background:#E8F5E9;color:#1B5E20;font-weight:700}
+.option.wrong{border-color:#C62828;background:#FFEBEE;color:#B71C1C}
+.option:disabled{cursor:default}
+.explain{margin-top:14px;padding:14px;background:#FFF8E1;border-right:4px solid var(--gold);border-radius:8px;font-size:.9rem;line-height:1.6}
+.result-card{text-align:center;background:var(--card);border-radius:var(--radius);padding:32px 24px;box-shadow:var(--shadow)}
+.result-emoji{font-size:4rem;margin-bottom:12px}
+.result-score{font-size:1.4rem;margin:14px 0}
+.result-score strong{color:var(--theme);font-size:1.8rem}
+.sections-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:20px 0}
+.section-card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);border-right:6px solid var(--sc,#2E7D32);display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;color:inherit;cursor:pointer;transition:transform .15s}
+.section-card:active{transform:scale(.99)}
+.section-card.locked{opacity:.5;cursor:not-allowed;filter:grayscale(.6)}
+.section-card-info{flex:1}
+.section-card-num{font-size:.75rem;color:var(--muted);margin-bottom:2px}
+.section-card-title{font-size:1rem;font-weight:700;color:var(--sc,#2E7D32);margin-bottom:4px}
+.section-card-desc{font-size:.8rem;color:#666;line-height:1.4}
+.section-card-icon{font-size:2rem;flex-shrink:0}
+.section-card-status{font-size:.7rem;padding:3px 8px;border-radius:10px;font-weight:700;display:inline-block;margin-top:8px}
+.status-done{background:#E8F5E9;color:#1B5E20}
+.status-open{background:#E3F2FD;color:#0D47A1}
+.status-locked{background:#F5F5F5;color:#666}
+.progress-wrap{margin:16px 0}
+.progress-bar{height:12px;background:#e0e0e0;border-radius:6px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#2E7D32,#F9A825);transition:width .4s;border-radius:6px}
+.progress-label{font-size:.85rem;color:var(--muted);text-align:center;display:block}
+.intro{background:linear-gradient(135deg,#fff,#f0f8f0);padding:24px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;text-align:center}
+.intro h2{font-size:1.15rem;margin-bottom:8px}
+.intro p{font-size:.9rem;color:#555}
+.info-section{background:#fff;padding:20px;border-radius:var(--radius);box-shadow:var(--shadow);margin-top:20px;font-size:.85rem;color:#555;text-align:center}
+.disclaimer{color:#C62828;font-size:.8rem;margin-top:10px}
+footer{text-align:center;padding:20px;font-size:.75rem;color:#999;margin-top:20px}
+.final-cta{background:linear-gradient(135deg,#FFF8E1,#FFECB3);padding:24px;border-radius:var(--radius);box-shadow:var(--shadow);text-align:center;margin:20px 0;border:2px solid var(--gold)}
+.final-cta h2{color:#B8860B;margin-bottom:10px}
+.final-cta .btn{background:var(--gold);color:#000;font-size:1.1rem;padding:16px}
+.cert-frame{border:6px double var(--gold);padding:24px;text-align:center;background:linear-gradient(135deg,#fffef8,#fff);border-radius:12px}
+.cert-header{font-size:.75rem;color:#555;line-height:1.5;margin-bottom:14px;border-bottom:1px solid #eee;padding-bottom:10px}
+.cert-title{font-size:1.4rem;color:#B8860B;font-weight:800;margin:10px 0}
+.cert-sub{font-size:.85rem;color:var(--muted);margin-bottom:14px}
+.cert-name{font-size:1.35rem;font-weight:800;color:#1a1a1a;margin:10px 0;padding:8px 0;border-bottom:2px dotted var(--gold)}
+.cert-info{font-size:.9rem;color:#333;margin:6px 0}
+.cert-sections-list{background:#FAFAFA;padding:12px;border-radius:8px;margin:12px 0;text-align:right;font-size:.8rem;line-height:1.7}
+.cert-sections-list ol{padding-right:22px;margin:0}
+.cert-score{font-size:1.05rem;font-weight:700;color:#B8860B;margin:12px 0}
+.cert-signs{display:flex;justify-content:space-around;margin-top:20px;padding-top:14px;border-top:1px solid #eee;font-size:.8rem;gap:10px}
+.cert-signs div{text-align:center;flex:1}
+.cert-signs strong{display:block;margin-bottom:4px;color:#333;font-size:.85rem}
+.cert-disclaimer{font-size:.7rem;color:#999;margin-top:14px;font-style:italic}
+.report-section{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-top:16px}
+.report-section h2{color:#B8860B;border-bottom:2px solid var(--gold);padding-bottom:10px;margin-bottom:14px}
+.report-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85rem}
+.report-table th,.report-table td{padding:10px 8px;border-bottom:1px solid #eee;text-align:right}
+.report-table th{background:#FAFAFA;font-weight:700;color:#333}
+.report-table td.score{font-weight:700;color:#2E7D32}
+.report-block{margin:14px 0;padding:12px;border-radius:8px;font-size:.9rem;line-height:1.7}
+.report-block h3{font-size:.95rem;margin:0 0 8px;color:#333;font-weight:700}
+.report-block ul{padding-right:20px;margin:6px 0}
+.report-block li{margin-bottom:6px}
+.block-strengths{background:#E8F5E9;border-right:4px solid #2E7D32}
+.block-weaknesses{background:#FFF3E0;border-right:4px solid #EF6C00}
+.block-plan{background:#E3F2FD;border-right:4px solid #0288D1}
+.final-actions{margin-top:20px}
+.final-actions .btn{margin-top:10px}
+@media(min-width:600px){
+.sections-grid{grid-template-columns:1fr 1fr}
+header h1{font-size:1.2rem!important}
+}
+@media print{
+header,.final-actions,.back,.badge{display:none!important}
+.cert-frame,.report-section{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+}
 </style>
 </head>
 <body>
 
-<h1>✅ الصفحة تعمل!</h1>
-<p>إذا كنت ترى هذه الرسالة، فإن GitHub Pages يعمل بشكل صحيح.</p>
-<p>اضغط الزر لتجربة JavaScript:</p>
+<!-- ========== الصفحة الرئيسية ========== -->
+<div id="home-view">
+<header>
+  <div>
+    <h1>رحلة اللياقة</h1>
+    <div class="sub">مجمع العز التعليمي — إدارة تعليم جازان</div>
+  </div>
+  <span class="badge" id="home-badge">0 / 7</span>
+</header>
+<div style="padding:20px;max-width:720px;margin:0 auto">
+  <div class="intro">
+    <h2>🌿 رحلة سبعة أقسام نحو صحة أفضل</h2>
+    <p>كل قسم قصير (10–15 دقيقة). أتمم القسم، اقرأ ملخصه، وافتح القسم التالي. بعد القسم السابع، تحصل على <strong>شهادة الإتمام + تقرير شامل</strong>.</p>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <span class="progress-label" id="progress-label">0 من 7 مكتملة</span>
+    </div>
+  </div>
+  <div class="sections-grid" id="sections-grid"></div>
+  <div id="final-cta-container"></div>
+  <div class="info-section">
+    <h3 style="margin-bottom:10px">عن الرحلة</h3>
+    <p>رحلة تعليمية توعوية أُعدّت وفق معايير منظمة الصحة العالمية (WHO 2020)، بإشراف الموجه الصحي الأستاذ <strong>محمد قطابري راجحي</strong>، ومدير المجمع الأستاذ <strong>علي محمد كديش</strong>.</p>
+    <p class="disclaimer">⚠️ المحتوى تعليمي توعوي، ولا يُغني عن الاستشارة الطبية.</p>
+  </div>
+  <footer>
+    <p>وزارة التعليم · الإدارة العامة للتعليم بمنطقة جازان · مجمع العز التعليمي</p>
+    <p style="margin-top:6px">© 2026 — رحلة اللياقة التعليمية</p>
+  </footer>
+</div>
+</div>
 
-<button onclick="test()">اضغط هنا</button>
-<div id="result"></div>
+<!-- ========== صفحة القسم ========== -->
+<div id="game-view" class="hidden">
+<header id="game-header">
+  <span class="back" onclick="goHome()">← الرئيسية</span>
+  <div>
+    <h1 id="game-title">صحتك أمانة</h1>
+    <div class="sub" id="game-sub">القسم 1</div>
+  </div>
+  <span class="badge" id="game-badge">1 / 7</span>
+</header>
+
+<section class="screen active" id="screen-welcome">
+  <div class="card" style="text-align:center">
+    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232E7D32'/><path d='M50 20 L50 80 M25 50 L75 50' stroke='white' stroke-width='8' stroke-linecap='round'/><circle cx='50' cy='50' r='8' fill='%23F9A825'/></svg>" alt="" class="welcome-logo">
+    <h2 id="welcome-title">أهلاً بك في القسم الأول</h2>
+    <p id="welcome-desc" style="color:#666;margin-bottom:8px"></p>
+    <ul class="welcome-points">
+      <li>⏱️ المدة: 10–15 دقيقة</li>
+      <li>📚 5 بطاقات تعليمية قصيرة</li>
+      <li>🎯 5 أسئلة اختيار من متعدد</li>
+      <li>🏅 شارة إتمام القسم</li>
+    </ul>
+    <button class="btn btn-primary" onclick="startSection()">ابدأ القسم</button>
+  </div>
+</section>
+
+<section class="screen" id="screen-register">
+  <div class="card">
+    <h2>سجّل بياناتك</h2>
+    <p style="color:#666;font-size:.85rem;margin-bottom:10px">تُحفظ مرة واحدة فقط، وتُستخدم في كل الأقسام.</p>
+    <label for="reg-name">الاسم الكامل</label>
+    <input type="text" id="reg-name" placeholder="مثال: أحمد محمد علي" maxlength="60">
+    <label for="reg-role">التصنيف</label>
+    <select id="reg-role" onchange="onRoleChange()">
+      <option value="">— اختر —</option>
+      <option value="student">طالب</option>
+      <option value="teacher">معلم</option>
+      <option value="admin">إداري</option>
+      <option value="parent">ولي أمر</option>
+    </select>
+    <div id="field-grade" class="hidden">
+      <label for="reg-grade">الصف الدراسي</label>
+      <select id="reg-grade">
+        <option value="">— اختر الصف —</option>
+        <optgroup label="المرحلة الابتدائية">
+          <option>أول ابتدائي</option><option>ثاني ابتدائي</option>
+          <option>ثالث ابتدائي</option><option>رابع ابتدائي</option>
+          <option>خامس ابتدائي</option><option>سادس ابتدائي</option>
+        </optgroup>
+        <optgroup label="المرحلة المتوسطة">
+          <option>أول متوسط</option><option>ثاني متوسط</option><option>ثالث متوسط</option>
+        </optgroup>
+        <optgroup label="المرحلة الثانوية">
+          <option>أول ثانوي</option><option>ثاني ثانوي</option><option>ثالث ثانوي</option>
+        </optgroup>
+      </select>
+    </div>
+    <div id="field-category" class="hidden">
+      <label for="reg-category">الصنف</label>
+      <select id="reg-category">
+        <option value="">— اختر —</option>
+        <optgroup label="معلم">
+          <option>معلم علوم</option><option>معلم رياضيات</option>
+          <option>معلم لغة عربية</option><option>معلم تربية بدنية</option>
+          <option>معلم آخر</option>
+        </optgroup>
+        <optgroup label="إداري">
+          <option>مدير</option><option>وكيل</option>
+          <option>مرشد طلابي</option><option>موجه صحي</option>
+          <option>إداري آخر</option>
+        </optgroup>
+        <optgroup label="ولي أمر">
+          <option>ولي أمر طالب</option><option>ولي أمر طالبة</option>
+        </optgroup>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="submitRegister()">دخول</button>
+  </div>
+</section>
+
+<section class="screen" id="screen-cards">
+  <div class="cards-header"><span id="cards-counter">بطاقة 1 من 5</span></div>
+  <div class="card-display" id="card-display"></div>
+  <div class="cards-nav">
+    <button class="btn btn-secondary" onclick="prevCard()">السابق</button>
+    <button class="btn btn-primary" onclick="nextCard()" id="btn-next-card">التالي</button>
+  </div>
+</section>
+
+<section class="screen" id="screen-quiz">
+  <div class="quiz-header">
+    <span id="quiz-counter">سؤال 1 من 5</span>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-progress-fill"></div></div>
+  </div>
+  <div class="quiz-display" id="quiz-display"></div>
+</section>
+
+<section class="screen" id="screen-result">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <h2 id="result-title">أحسنت!</h2>
+    <p class="result-score">درجتك في هذا القسم: <strong id="result-score">0 / 5</strong></p>
+    <p id="result-message" style="color:#555;font-size:.9rem;margin-bottom:14px"></p>
+    <div id="result-badge" style="margin:16px 0;font-size:.85rem;color:#666"></div>
+    <button class="btn btn-primary" id="btn-result-next" onclick="goToNextSection()"></button>
+    <button class="btn btn-secondary" onclick="goHome()">🏠 العودة للرئيسية</button>
+  </div>
+</section>
+
+<section class="screen" id="screen-review-end">
+  <div class="result-card">
+    <div class="result-emoji">📖</div>
+    <h2>مراجعة قسم مكتمل</h2>
+    <p class="result-score">درجتك السابقة: <strong id="review-score">0 / 5</strong></p>
+    <p style="color:#666;font-size:.85rem;margin:12px 0">لا يمكن إعادة الاختبار بعد الإتمام، لكن يمكنك دائماً قراءة البطاقات.</p>
+    <button class="btn btn-secondary" onclick="goHome()">🏠 العودة للرئيسية</button>
+  </div>
+</section>
+
+</div>
+
+<!-- ========== الشهادة والتقرير ========== -->
+<div id="final-view" class="hidden">
+<header style="--theme:#B8860B">
+  <span class="back" onclick="goHome()">← الرئيسية</span>
+  <div>
+    <h1>🎓 شهادة الإتمام والتقرير</h1>
+    <div class="sub">رحلة اللياقة — 7 أقسام</div>
+  </div>
+</header>
+<div style="padding:20px;max-width:720px;margin:0 auto">
+  <div class="cert-frame" id="cert-frame"></div>
+  <div class="report-section" id="report-area"></div>
+  <div class="final-actions">
+    <button class="btn btn-gold" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+    <button class="btn btn-whatsapp" onclick="sendWhatsAppFinal()">📤 إرسال عبر واتساب</button>
+    <button class="btn btn-secondary" onclick="goHome()">🏠 العودة للرئيسية</button>
+  </div>
+</div>
+</div>
 
 <script>
-function test() {
-  document.getElementById("result").textContent = "🎉 JavaScript يعمل أيضاً!";
-}
+// سيُضاف الجزء الثاني هنا
 </script>
-
 </body>
 </html>
